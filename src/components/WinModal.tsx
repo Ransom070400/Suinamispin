@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { X, Twitter } from 'lucide-react'; // Sparkles removed from import
+import { X, Twitter } from 'lucide-react';
 import { Reward } from '../App';
 import Confetti from './Confetti';
 
@@ -15,7 +15,7 @@ const WinModal = ({ reward, onClose }: WinModalProps) => {
   useEffect(() => {
     if (isWin) {
       setShowConfetti(true);
-      // Play audio on win (removed the data URI for brevity, assuming it works)
+      // Play audio on win (assuming the data URI works)
       const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBCl+zPLTgjMGHm7A7OGVRwsPUrXp8a1cFgpBmuDyvWgbBCmBzvLTgjMGHm7AOGVRwwPUbXp8a1bFgo');
       audio.play().catch(() => {});
     }
@@ -26,16 +26,22 @@ const WinModal = ({ reward, onClose }: WinModalProps) => {
   };
 
   const getTweetText = () => {
-    // Emojis removed: 💧 and 🔥
     return `I just spun the wheel at #SuinamiLagos and won a ${reward}! Big thanks to the Sui Nigeria team for bringing the energy and rewards @panic_community, @Rainbowsdotsui, @Goodylili, @ezeransome #BuildOnSui #Suinami #SuiEcosystem #SuiNigeria`;
   };
 
-  // Function to handle the social share action
-  const handleShareOnX = () => {
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(getTweetText())}`, '_blank');
+  // Generates the full URL for the Twitter intent
+  const getTweetIntentUrl = () => {
+    return `https://twitter.com/intent/tweet?text=${encodeURIComponent(getTweetText())}`;
   };
 
-  const qrCodeUrl = generateQRCode(`Win: ${reward} - Claim at Suinami Lagos Booth`);
+  // Function to handle the social share action (used by the button)
+  const handleShareOnX = () => {
+    window.open(getTweetIntentUrl(), '_blank');
+  };
+
+  // === KEY CHANGE HERE ===
+  // The QR code now contains the Twitter Intent URL itself.
+  const qrCodeUrl = generateQRCode(getTweetIntentUrl());
 
   return (
     <>
@@ -52,15 +58,7 @@ const WinModal = ({ reward, onClose }: WinModalProps) => {
 
           {isWin ? (
             <div className="text-center">
-              {/* Removed Sparkles icon div from here */}
-              {/*
-              <div className="mb-6 flex justify-center">
-                <div className="bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full p-6 shadow-lg shadow-cyan-500/50">
-                  <Sparkles className="w-16 h-16 text-white animate-pulse" />
-                </div>
-              </div>
-              */}
-
+              
               <h2 className="text-4xl font-bold text-white mb-3">
                 Congratulations!
               </h2>
@@ -80,6 +78,7 @@ const WinModal = ({ reward, onClose }: WinModalProps) => {
               <p className="text-blue-200 text-lg leading-relaxed mb-6">
                 **Scan this QR code to claim your reward** at the{' '}
                 <span className="text-cyan-400 font-semibold">Suinami Lagos Booth</span>
+                , and let the world know about your win!
               </p>
               
               <button
@@ -102,15 +101,6 @@ const WinModal = ({ reward, onClose }: WinModalProps) => {
             </div>
           ) : (
             <div className="text-center">
-              {/* Removed Sparkles icon div from here */}
-              {/*
-              <div className="mb-6 flex justify-center">
-                <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-full p-6 shadow-lg">
-                  <Sparkles className="w-16 h-16 text-white/60" />
-                </div>
-              </div>
-              */}
-
               <h2 className="text-3xl font-bold text-white mb-4">
                 So Close!
               </h2>
